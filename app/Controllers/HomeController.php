@@ -15,26 +15,7 @@ class HomeController
 
     public function index()
     {
-        $array_loader = [
-            'logfile' => Main::env()['SERVER_LOGFILE']
-        ];
         Init::render('index');
     }
-
-    public function console()
-    {
-
-        $array_loader = [
-            'logfile' => Main::env()['SERVER_LOGFILE']
-        ];
-
-        Init::render('index', $array_loader);
-        
-    }
-
-// public function articles(){
-
-//     echo $this->twig->render('index.html.twig');
-// }
 
 }
