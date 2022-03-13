@@ -1,0 +1,16 @@
+<?php
+
+namespace NeeZiaa;
+
+use NeeZiaa\Router;
+
+$router = new Router();
+$router
+    // Pages
+    ->get('/', 'home#index', 'home')
+    ->get('/login', 'login#index', 'login')
+
+    // Api
+    ->post('/auth', 'login#post', 'login')
+    ->post('/api/console', 'api/console#index', 'index', 'api/console')
+    ->run();

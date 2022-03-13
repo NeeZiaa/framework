@@ -1,0 +1,17 @@
+{
+    "autoload": {
+        "psr-4":{
+            "NeeZiaa\\": "src/"
+        }
+    },
+    "require": {
+        "altorouter/altorouter": "^2.0",
+        "phpmailer/phpmailer": "^6.6",
+        "vlucas/phpdotenv": "^5.4",
+        "twig/twig": "^3.3",
+        "filp/whoops": "^2.14"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.0"
+    }
+}
