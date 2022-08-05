@@ -1,50 +1,46 @@
 <?php
-namespace NeeZiaa\Database;
+namespace NeeZiaa\Database\Mysql;
 
 use NeeZiaa\App;
 use NeeZiaa\Database\DatabaseException;
-use PDO;
-use phpDocumentor\Reflection\Types\Callable_;
 
 class QueryBuilder
 {
 
-    private string $action;
+    private $action;
 
-    private string $columns;
+    private $colums;
 
-    private mixed $markers;
+    private $markers;
 
-    private string $update;
+    private $update;
 
-    private mixed $from;
+    private $from;
 
-    private array $where = [];
+    private $where = [];
 
-    private mixed $entity;
+    private $entity;
 
-    private array $order = [];
+    private $order = [];
 
-    private int $limit;
+    private $limit;
 
-    private mixed $joins;
+    private $joins;
 
-    private mixed $db = null;
+    private $db;
 
-    private array $params = [];
+    private $params = [];
 
-    private mixed $records;
+    private $records;
 
-    private int $index = 0;
+    private $index = 0;
+
     /**
-     * @var string[]
+     * @throws \NeeZiaa\Database\DatabaseException
      */
-    private array $select;
-
-
-    public function __construct(?PDO $db = null){
-        if(is_null($this->db)) $this->db = App::getInstance()->getDB(); else $this->db = $db;
-        
+    public function __construct(?\PDO $db = null){
+        if(is_null($this->db)) $db = (App::getInstance())->getDb();
+        $this->db = $db;
     }
 
     /**
@@ -59,15 +55,15 @@ class QueryBuilder
         if($alias) {
             $this->from[$alias] = $table;
         } else {
-            $this->from .= $table;
+            $this->from[] = $table;
         }
 
         return $this;
     }
 
     /**
-     * Définie les colonnes sélectionnées
-     * @param string ...$fiels
+     * Définie les colonnes séléctionnées
+     * @param string $fiels
      * @return QueryBuilder
      */
 
@@ -80,7 +76,7 @@ class QueryBuilder
 
 
     /**
-     * Définie les colonnes à insérer
+     * Définie les colonnes a insérer
      * @param array $values
      * @return QueryBuilder
      */
@@ -96,7 +92,7 @@ class QueryBuilder
         $columns = trim($columns, ', ');
         $markers = trim($markers, ', ');
         $request = 'INSERT INTO `[TABLE_NAME]` (' . $columns . ') VALUES (' . $markers . ')';
-        $this->columns = $columns;
+        $this->colums = $columns;
         $this->markers = $markers;
         $this->action = "INSERT";
         return $this;
@@ -108,7 +104,7 @@ class QueryBuilder
      * @return QueryBuilder
      */
 
-    public function update(array $values): self
+    public function update($values): self
     {
         $request = '';
         foreach ($values as $key) {
@@ -121,6 +117,7 @@ class QueryBuilder
 
     /**
      * Définie la/les ligne(s) a supprimer
+     * @param array $values
      * @return QueryBuilder
      */
 
@@ -135,7 +132,7 @@ class QueryBuilder
      * Spécifie la limite
      * @param int $lenght
      * @param int $offset
-     * @return QueryBuilder 
+     * @return QueryBuilder
      */
 
     public function limit(int $lenght, int $offset = 0): self
@@ -146,19 +143,19 @@ class QueryBuilder
 
     /**
      * Spécifie l'ordre
-     * @param string $order
+     * @param string $orders
      * @return QueryBuilder
      */
 
     public function order(string $order): self
     {
         $this->order[] = $order;
-        return $this;    
+        return $this;
     }
 
     /**
      * @param string $table
-     * @param string $condition
+     * @param string $condtion
      * @param string $type
      * @return QueryBuilder
      */
@@ -170,12 +167,12 @@ class QueryBuilder
     }
 
     /**
-     * Definie les conditions
+     * Définie les conditions
      * @param string ...$condition
      * @return QueryBuilder
      */
 
-    public function where(string ...$condition): self 
+    public function where(string ...$condition): self
     {
         $this->where = array_merge($this->where, $condition);
         return $this;
@@ -183,8 +180,7 @@ class QueryBuilder
 
     /**
      * Compte le nombre de lignes
-     * @return int
-     * @throws \NeeZiaa\Database\DatabaseException
+     * @return QueryBuilder
      */
 
     public function count(): int
@@ -208,31 +204,25 @@ class QueryBuilder
 
     /**
      * Retourne un tableau
-     * @param string|null $mode
-     * @return array
-     * @throws \NeeZiaa\Database\DatabaseException
+     * @param string $mode
+     * @param QueryBuilder
      */
 
     public function fetch(?string $mode = "FETCH_ASSOC"): array
     {
         if(is_null($this->records)){
             $mode = constant("\PDO::".strtoupper($mode));
-            $this->records = $this->execute()->fetch($mode);
+            $this->records = $this->execute()->fetch('\PDO::'.$mode);
         }
-
-        if(is_bool($this->records)){
-            $this->records = [];
-        }
-
         return $this->records;
+
     }
 
 
     /**
      * Retourne un tableau
-     * @param string|null $mode
-     * @return array
-     * @throws \NeeZiaa\Database\DatabaseException
+     * @param string $mode
+     * @param QueryBuilder
      */
 
     public function fetchAll(?string $mode = "FETCH_ASSOC"): array
@@ -241,18 +231,12 @@ class QueryBuilder
             $mode = constant("\PDO::".strtoupper($mode));
             $this->records = $this->execute()->fetchAll($mode);
         }
-
-        if(is_bool($this->records)){
-            $this->records = [];
-        }
-
         return $this->records;
     }
 
 
     /**
      * Convertie la requête sous forme de string
-     * @throws \NeeZiaa\Database\DatabaseException
      */
 
     public function __toString()
@@ -299,10 +283,10 @@ class QueryBuilder
             $parts = ['INSERT INTO'];
 
             $parts[] = $this->buildFrom();
-            
+
             //dd($this->markers, $this->colums, $this->buildFrom(), $this->params);
 
-            $parts[] = '('.$this->columns.')';
+            $parts[] = '('.$this->colums.')';
             $parts[] = 'VALUES('.$this->markers.')';
 
             return join(' ', $parts);
@@ -321,7 +305,7 @@ class QueryBuilder
                 $parts[] = "WHERE";
                 $parts[] = "(" . join(') AND (', $this->where) . ')';
             }
-            
+
             return join(' ', $parts);
 
 
@@ -342,10 +326,12 @@ class QueryBuilder
             if(is_null($this->action)) {
                 throw new DatabaseException("Undefined SQL statement, please define it", 1);
             } else {
-                throw new DatabaseException("Unknow SQL statement", 1); 
+                throw new DatabaseException("Unknow SQL statement", 1);
             }
 
         }
+
+
 
     }
 
@@ -360,16 +346,15 @@ class QueryBuilder
                 $from[] = $value;
             }
 
-        }            
+        }
         return join(', ', $from);
     }
 
     /**
      * Execute la requête
-     * @throws \NeeZiaa\Database\DatabaseException
      */
-    
-    public function execute(): bool|\PDOStatement
+
+    public function execute()
     {
         $query = $this->__toString();
         if(!empty($this->params)){
@@ -377,9 +362,11 @@ class QueryBuilder
             $statement->execute($this->params);
             return $statement;
         }
+
         return $this->db->query($query);
 
 
     }
+
 
 }

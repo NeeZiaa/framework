@@ -1,23 +1,25 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{% endblock %}</title>
-  <link rel="stylesheet" href="assets/css/main.css">
-  {% block stylesheets %}{% endblock %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
-  {% block javascript %}{% endblock %}
+  <link rel="shortcut icon" href="/assets/img/logo.png" type="image/x-icon">  
+  {% block stylesheets %}
+
+  {% endblock %}
 </head>
 <body>
+    {% block header %}
 
-  {% block header %}{% endblock %}
+    {% endblock %}
 
-  {% block content %}{% endblock %}
+    {% block content %}
 
-  {% block footer %}{% endblock %}
+    {% endblock %}
 
+    {% block footer %}
+
+    {% endblock %}
 </body>
 </html>

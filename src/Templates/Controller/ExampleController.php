@@ -1,8 +1,8 @@
 <?php
 
-namespace NeeZiaa\Controller;
+namespace NeeZiaa\Router\Router\Utils\Controller;
 
-use NeeZiaa\Init;
+use NeeZiaa\Router\Router\Utils\Init;
 
 class _name_1Controller
 {

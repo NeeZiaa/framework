@@ -17,12 +17,12 @@ if(is_null($name)){
     exit;
 }
 
-$newController = fopen(\NeeZiaa\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . ucfirst($name) . 'Controller.php', 'w+');
-$routesBackup = fopen(\NeeZiaa\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Routes.php', 'r');
+$newController = fopen(\NeeZiaa\Router\Router\Utils\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . ucfirst($name) . 'Controller.php', 'w+');
+$routesBackup = fopen(\NeeZiaa\Router\Router\Utils\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Routes.php', 'r');
 
 // Backup
-$file = \NeeZiaa\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Routes.php';
-$newfile = \NeeZiaa\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Routes.php.bak';
+$file = \NeeZiaa\Router\Router\Utils\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Routes.php';
+$newfile = \NeeZiaa\Router\Router\Utils\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Routes.php.bak';
 copy($file, $newfile);
 
 try {
@@ -61,17 +61,17 @@ try {
 }
 
 
-$controller = file_get_contents(\NeeZiaa\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'Controller' . DIRECTORY_SEPARATOR . 'ExampleController.php'); 
+$controller = file_get_contents(\NeeZiaa\Router\Router\Utils\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'Controller' . DIRECTORY_SEPARATOR . 'ExampleController.php');
 
 $controller = str_replace('_name_1', ucfirst($name), $controller);
 $controller = str_replace('_name_2', $name, $controller);
 
 if(in_array('--view', $argv)){
 
-    $newView = fopen(\NeeZiaa\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Views' . DIRECTORY_SEPARATOR . $name . '.html.twig', 'w+');
+    $newView = fopen(\NeeZiaa\Router\Router\Utils\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Views' . DIRECTORY_SEPARATOR . $name . '.html.twig', 'w+');
 
 
-    $view = file_get_contents(\NeeZiaa\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'ExampleView.html.twig');
+    $view = file_get_contents(\NeeZiaa\Router\Router\Utils\Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'ExampleView.html.twig');
 
     $view = str_replace('_name_', ucfirst($name), $view);
 

@@ -1,16 +1,25 @@
 <?php
 
-namespace NeeZiaa;
+namespace neeziaa;
 
-use NeeZiaa\Router;
+use neeziaa\Router;
 
 $router = new Router();
 $router
-    // Pages
-    ->get('/', 'home#index', 'home')
-    ->get('/login', 'login#index', 'login')
+    ->get('/', 'home', 'home', 'index')
 
-    // Api
-    ->post('/auth', 'login#post', 'login')
-    ->post('/api/console', 'api/console#index', 'index', 'api/console')
+    ->get('/kamas', 'articles', 'articles', 'kamas')
+
+    ->get('/login', 'login', 'loginget', 'index')
+
+    ->post('/login', 'login', 'login#post', 'login')
+
+    ->get('/test/[i:id]', 'test', 'test', 'index')
+
+    ->get('/test', 'test', 'test', 'index')
+
+    ->get('/test3', 'test3', 'test3', 'index')
+
+    ->get('/test3', 'test3', 'test3', 'index')
+    ->get('/test4', 'test4', 'test4', 'index')
     ->run();

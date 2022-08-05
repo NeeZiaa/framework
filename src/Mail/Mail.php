@@ -1,22 +1,23 @@
 <?php 
 namespace NeeZiaa;
 
-use NeeZiaa\main;
+use NeeZiaa\Router\Router\Utils\main;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class Mail {
 
-    public static function send_mail($email,$subject,$body,$altbody){
+    public static function send_mail(string $email, string $subject, string $body, string $altbody){
         $mail = new PHPMailer(true);
   
         try {
             //Server settings
             $mail->isSMTP();                                              //Send using SMTP
-            $mail->Host       = Main::env()['SMTP'];                      //Set the SMTP server to send through
+            $mail->Host       = Main::env()['MAIL_HOST'];                      //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                     //Enable SMTP authentication
             $mail->Username   = Main::env()['MAIL_USER'];                 //SMTP username
             $mail->Password   = Main::env()['MAIL_PASSWD'];               //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;              //Enable implicit TLS encryption
-            $mail->Port       = Main::env()['SMTP_PORT'];                 //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+            $mail->Port       = Main::env()['MAIL_PORT'];                 //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
   
             //Recipients
             $mail->setFrom('');

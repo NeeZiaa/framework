@@ -1,15 +1,21 @@
 {
     "autoload": {
         "psr-4":{
-            "NeeZiaa\\": "src/"
+            "NeeZiaa\\": "src",
+            "App\\Controller\\": "app/Controllers",
+            "App\\Models\\": "app/Models"
         }
     },
     "require": {
         "altorouter/altorouter": "^2.0",
         "phpmailer/phpmailer": "^6.6",
         "vlucas/phpdotenv": "^5.4",
+        "filp/whoops": "^2.14",
         "twig/twig": "^3.3",
-        "filp/whoops": "^2.14"
+        "phpunit/phpunit": "^9.5",
+      "ext-pdo": "*",
+      "ext-simplexml": "*",
+        "ext-libxml": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.0"

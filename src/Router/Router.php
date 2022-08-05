@@ -1,77 +1,109 @@
 <?php
-namespace NeeZiaa;
 
-use AltoRouter;
-use NeeZiaa\Main;
-use NeeZiaa\Controller;
-use NeeZiaa\Init;
+namespace NeeZiaa\Router;
+
+use http\Header;
+use NeeZiaa\Router\RouterException;
 
 class Router
 {
+    private string $url;
+    private array $routes = array();
+    private array $namedRoutes = array();
+    public static Router|null $_instance = null;
 
-    /** 
-     * @var string
+    /**
+     * @return Router|null
      */
-    private $controllerPath;
+    public static function getInstance(): ?Router
+    {
+        if(isset(self::$_instance) == null) self::$_instance = new Router($_SERVER['REQUEST_URI']);
+        return self::$_instance;
+    }
 
-
-    /** 
-     * @var AltoRouter
+    /**
+     *  constructor
+     * @param string $url
+     * @return void
      */
-    private $router;
-
-    public function __construct()
+    public function __construct(string $url)
     {
-        $this->controllerPath = Main::env()['PROJECT_PATH'] . DIRECTORY_SEPARATOR  .'app' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR;
-
-        $this->router = new AltoRouter();
+        $this->url = $url;
     }
 
-    public function get(string $url, string $controller, string $name): self
+    /**
+     * Get method
+     *
+     * @param string $path
+     * @param mixed $callable
+     * @param string|null $name
+     *
+     * @return Route
+     */
+    public function get(string $path, mixed $callable, string $controller, ?string $name = null): Route
     {
-   
-        $controller = explode('#', $controller);
-        $function = $controller[1];
-        $controller = $controller[0];
-
-        $name = $name . "#get";
-
-        $this->router->map('GET', $url, $controller, $name);
-        $this->function[$name] = $function;
-        return $this;
+        return $this->add($path, $callable, $name, 'GET');
     }
 
-    public function post(string $url, string $controller, string $name): self
+    /**
+     * Post method
+     *
+     * @param string $path
+     * @param mixed $callable
+     * @param string|null $name
+     * @return Route
+     */
+    public function post(string $path, mixed $callable, ?string $name = null): Route
     {
-
-        $controller = explode('#', $controller);
-        //dd($controller);
-        $function = $controller[1];
-        $controller = $controller[0];
-        $name = $name . "#post";
-
-        $this->router->map('POST', $url, $controller, $name);
-        $this->function[$name] = $function;
-        return $this;
+        return $this->add($path, $callable, $name, 'POST');
     }
 
+    /**
+     * Add - Register Route
+     *
+     * @param string $path
+     * @param mixed $callable
+     * @param string|null $name
+     * @param string $method
+     * @return Route
+     */
+    private function add(string $path, mixed $callable, ?string $name, string $method): Route
+    {
+        $route = new Route($path, $callable);
+        $this->routes[$method][] = $route;
+        if ($name) $this->namedRoutes[$name] = $route;
+        return $route;
+    }
 
+    /**
+     * @throws \NeeZiaa\Router\RouterException
+     */
     public function run()
     {
+        if (!isset($this->routes[$_SERVER['REQUEST_METHOD']])) throw new RouterException('REQUEST_METHOD does not exist');
 
-        $match = $this->router->match(); 
-
-        // dd($match);
-
-        if(!is_array($match)){
-            throw new \Exception('No matching routes');
+        foreach($this->routes[$_SERVER['REQUEST_METHOD']] as $route) {
+            if ($route->match($this->url)) return $route->call();
         }
-
-        $function = $this->function[$match['name']];
-
-        $c = Init::load_controller($match['target'], $match['params']);
-        $c->$function();
-
+        throw new RouterException('No matching routes');
     }
 
+    /**
+     * Generate link
+     * @throws \NeeZiaa\Router\RouterException
+     */
+    public function url(string $name, array $params = [])
+    {
+        if (!isset($this->namedRoutes[$name])) throw new RouterException('No route matches this name');
+        return $this->namedRoutes[$name]->getUrl($params);
+    }
+
+    /**
+     * Redirect to route
+     * @throws \NeeZiaa\Router\RouterException
+     */
+    public function redirect(string $route, array $params = []): void
+    {
+        header('Location: '. $this->url($route, $params));
+    }
 }

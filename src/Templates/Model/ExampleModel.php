@@ -1,9 +1,9 @@
 <?php
 
-namespace NeeZiaa\Model;
+namespace NeeZiaa\Router\Router\Utils\Model;
 
-use NeeZiaa\Init;
-use NeeZiaa\Database\QueryBuilder;
+use NeeZiaa\Router\Router\Utils\Init;
+use NeeZiaa\Router\Router\Utils\Database\QueryBuilder;
 
 class ExampleModel
 {
