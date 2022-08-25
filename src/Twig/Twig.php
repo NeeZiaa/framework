@@ -1,9 +1,8 @@
 <?php
 namespace NeeZiaa\Twig;
 
+use App\Models\Admin\SettingsModel;
 use NeeZiaa\App;
-use NeeZiaa\Utils\Config;
-use NeeZiaa\Utils\Init;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -41,10 +40,9 @@ class Twig {
         if(!is_null($extensions)) {
             foreach ($extensions['function'] as $fu){
                 $name = '\NeeZiaa\Twig\Extensions\\'. ucfirst($fu) . 'Extension';
-                $twig->addFunction(
-                    (new $name())
-                        ->getFunctions()
-                );
+                foreach ((new $name())->getFunctions() as $v) {
+                    $twig->addFunction($v);
+                }
                 $twig->addExtension(new $name());
             }
             foreach ($extensions['filters'] as $fi){

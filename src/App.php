@@ -8,6 +8,7 @@ use NeeZiaa\Router\RouterException;
 use NeeZiaa\Router\Routes;
 use NeeZiaa\Twig\Twig;
 use NeeZiaa\Utils\Config;
+use NeeZiaa\Utils\Ip;
 use Psr\Log\NullLogger;
 
 class App {
@@ -108,6 +109,11 @@ class App {
         $json = json_encode($xml);
         if(!is_null($type)) return json_decode($json,TRUE)[$type];
         return json_decode($json,TRUE);
+    }
+
+    public function getIp(): string
+    {
+        return Ip::getIp();
     }
 
 }

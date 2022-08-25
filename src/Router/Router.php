@@ -40,7 +40,7 @@ class Router
      *
      * @return Route
      */
-    public function get(string $path, mixed $callable, string $controller, ?string $name = null): Route
+    public function get(string $path, mixed $callable, ?string $name = null): Route
     {
         return $this->add($path, $callable, $name, 'GET');
     }
@@ -86,6 +86,12 @@ class Router
             if ($route->match($this->url)) return $route->call();
         }
         throw new RouterException('No matching routes');
+    }
+
+    public function current(): string
+    {
+        if(isset($_SERVER['HTTPS'])) $protocol = 'https'; else $protocol = 'http';
+        return $protocol . '://' . $_SERVER['HTTP_HOST'] . $this->url;
     }
 
     /**

@@ -30,7 +30,6 @@ class Route
         if (!preg_match($regex, $url, $matches)) {
             return false;
         }
-
         array_shift($matches);
         $this->matches = $matches;
         return true;
@@ -46,9 +45,15 @@ class Route
 
     public function call()
     {
+        $co = [];
         if (is_string($this->callable)) {
             $params = explode('@', $this->callable);
-            $controller = "App\\Controller\\" . str_replace('/', '\\' ,ucfirst($params[0])) . "Controller";
+            $c = explode('/', $params[0]);
+            foreach($c as $c) {
+                $co[] = ucfirst($c);
+            }
+            $co = join('\\', $co);
+            $controller = "App\\Controller\\" . $co . "Controller";
             $controller = new $controller($this->matches);
             return call_user_func_array([$controller, $params[1]], $this->matches);
         } else {

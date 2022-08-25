@@ -13,17 +13,19 @@ class OthersExtension extends AbstractExtension {
     /**
      * @return TwigFunction
      */
-    public function getFunctions(): TwigFunction
+    public function getFunctions(): array
     {
-        return new TwigFunction('alert', array($this, 'alert'));
+        return array(
+            new TwigFunction('alert', array($this, 'alert')),
+        );
     }
 
     /**
      * @throws Exception
      */
-    public function alert(): string
+    public function alert(): void
     {
-        return Alert::show();
+        echo Alert::show();
     }
 
 }

@@ -17,7 +17,7 @@ class QueryBuilder
 
     private string $update;
 
-    private mixed $from;
+    private mixed $from = null;
 
     private array $where = [];
 
@@ -25,7 +25,7 @@ class QueryBuilder
 
     private array $order = [];
 
-    private int $limit;
+    private mixed $limit;
 
     private mixed $joins;
 
@@ -33,7 +33,7 @@ class QueryBuilder
 
     private array $params = [];
 
-    private mixed $records;
+    private mixed $records = null;
 
     private int $index = 0;
     /**
@@ -349,19 +349,30 @@ class QueryBuilder
 
     }
 
+    /**
+     * @throws \NeeZiaa\Database\DatabaseException
+     */
     private function buildFrom(): string
     {
         $from = [];
-        foreach ($this->from as $key => $value) {
-            if(is_string($key)){
-                $from[] = "value as $key";
+        if(is_array($this->from)) {
+            foreach ($this->from as $key => $value) {
+                if(is_string($key)){
+                    $from[] = "value as $key";
 
-            } else {
-                $from[] = $value;
+                } else {
+                    $from[] = $value;
+                }
+
             }
+            return join(', ', $from);
 
-        }            
-        return join(', ', $from);
+        } elseif(is_string($this->from)) {
+            return $this->from;
+        } else {
+            throw new \NeeZiaa\Database\DatabaseException("Incorrect type");
+        }
+
     }
 
     /**
