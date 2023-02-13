@@ -3,6 +3,7 @@
     <twig>
         <function>url</function>
         <function>others</function>
+        <function>permission</function>
         <filters/>
     </twig>
 </extensions>

@@ -54,8 +54,7 @@ class Route
             }
             $co = join('\\', $co);
             $controller = "App\\Controller\\" . $co . "Controller";
-            $controller = new $controller($this->matches);
-            return call_user_func_array([$controller, $params[1]], $this->matches);
+            return call_user_func_array([new $controller($this->matches), $params[1]], $this->matches);
         } else {
             return call_user_func_array($this->callable, $this->matches);
         }

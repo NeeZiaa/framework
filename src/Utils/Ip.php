@@ -4,6 +4,8 @@ namespace NeeZiaa\Utils;
 
 class Ip {
 
+    // TODO Track IP
+
     public static function getIp(): string
     {
         if(!empty($_SERVER['HTTP_CLIENT_IP'])){

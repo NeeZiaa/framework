@@ -15,7 +15,8 @@
         "phpunit/phpunit": "^9.5",
       "ext-pdo": "*",
       "ext-simplexml": "*",
-        "ext-libxml": "*"
+        "ext-libxml": "*",
+      "ext-curl": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.0"

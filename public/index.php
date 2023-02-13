@@ -1,12 +1,22 @@
 <?php
 
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 1000');
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) header("Access-Control-Allow-Headers: Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, token");
+    exit(0);
+}
+
 require dirname(__DIR__).'/vendor/autoload.php';
 
-use NeeZiaa\Router\Routes;
+$app = (new NeeZiaa\App());
 
-$config = NeeZiaa\Utils\Config::getInstance();
-
-if($config->get('DEBUG'))
+if($app->getSettings()->get('DEBUG'))
 {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -18,7 +28,7 @@ if($config->get('DEBUG'))
 
 session_start();
 
-$app = (new NeeZiaa\App($config));
+$app->extractPost();
 $app->setRoutes();
 
-//! Code non exécuté !
+//! Code non exécuté | Unreachable code !

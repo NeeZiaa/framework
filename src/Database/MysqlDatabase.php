@@ -3,7 +3,7 @@ namespace NeeZiaa\Database;
 
 use PDO;
 
-class MysqlDatabase extends Database {
+class MysqlDatabase {
 
     public function getPDO($host, $db, $user, $password): PDO
     {

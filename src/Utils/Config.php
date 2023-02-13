@@ -48,4 +48,28 @@ class Config {
         return $this->settings;
     }
 
+    /**
+     * @param mixed $settings
+     * @return bool
+     */
+
+    public function update(mixed $settings): bool
+    {
+        $parent = dirname(__DIR__, 2) . '/';
+
+        try {
+            $env = fopen($parent . '.env', 'w+');
+            $backup = fopen($parent . '.env.backup', 'w+');
+            // Create backup
+            file_put_contents($parent . '.env.backup', file_get_contents($parent . '.env'));
+            // Update settings
+            file_put_contents($parent . '.env', $settings);
+            return true;
+        } catch(Exception $e) {
+            // Some error
+            return false;
+        }
+
+    }
+
 }
