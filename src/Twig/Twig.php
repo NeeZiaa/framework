@@ -9,16 +9,6 @@ use Twig\Loader\FilesystemLoader;
 class Twig {
 
     private Environment $twig;
-    private static $_instance;
-
-    /**
-     * @return mixed
-     */
-    public static function getInstance(): mixed
-    {
-        if(is_null(self::$_instance)) new Twig();
-        return self::$_instance;
-    }
 
     public function __construct(?array $extensions = null)
     {

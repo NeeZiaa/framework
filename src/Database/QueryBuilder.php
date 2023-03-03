@@ -43,7 +43,7 @@ class QueryBuilder
 
 
     public function __construct(?PDO $db = null){
-        if(is_null($this->db)) $this->db = App::getInstance()->getDB(); else $this->db = $db;
+        if(is_null($this->db)) $this->db = App::getInstance()->getDb(); else $this->db = $db;
         
     }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<extensions>
+    <twig>
+        <function>url</function>
+        <function>others</function>
+        <function>permission</function>
+        <filters/>
+    </twig>
+</extensions>

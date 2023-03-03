@@ -24,13 +24,13 @@ class UrlExtension extends AbstractExtension
     public function url($route, $params = [])
     {
 
-        return App::getInstance()->getRouter()->url($route, $params);
+        return App::getInstance()->getRouter()->generateUrl($route, $params);
 
     }
 
     public function current_page(): string
     {
-        return App::getInstance()->getRouter()->current();
+        return App::getInstance()->getRouter()->currentUrl();
     }
 
 }

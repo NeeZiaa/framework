@@ -10,7 +10,7 @@ class Ip {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
         } elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
             $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }else{
+        } else {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
         return $ip;

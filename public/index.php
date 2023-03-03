@@ -2,11 +2,11 @@
 
 require dirname(__DIR__).'/vendor/autoload.php';
 
-use NeeZiaa\Router\Routes;
+session_start();
 
-$config = NeeZiaa\Utils\Config::getInstance();
+$app = new NeeZiaa\App();
 
-if($config->get('DEBUG'))
+if($app->getSettings()->get('DEBUG'))
 {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -15,10 +15,13 @@ if($config->get('DEBUG'))
     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
     $whoops->register();
 }
+if(extension_loaded('yaml')) {
+    dd("Extension chargée");
+} else {
+    dd('Extension non chargée');
+}
 
-session_start();
+$app->registerController("Home");
+$app->run();
 
-$app = (new NeeZiaa\App($config));
-$app->setRoutes();
-
-//! Code non exécuté !
+//! Code non exécuté | Unreachable code !
