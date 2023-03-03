@@ -1,19 +1,18 @@
-<?php
+namespace NeeZiaa\Router\Utils\Controller;
 
-namespace NeeZiaa\Router\Router\Utils\Controller;
+use NeeZiaa\Router\Utils\Init;
 
-use NeeZiaa\Router\Router\Utils\Init;
-
-class _name_1Controller
+class Name1Controller
 {
+    private array $params;
 
-    public function __construct($params){
+    public function __construct(array $params)
+    {
         $this->params = $params;
     }
 
-    public function index()
+    public function index(): void
     {
-        Init::render('_name_2');
-
+        Init::render('name2');
     }
 }
