@@ -7,14 +7,14 @@ class Alert {
     /**
      * @param string $type
      * @param string $content
-     * @throws \NeeZiaa\Utils\Exception
+     * @throws \Exception
      * danger|warning|success|info
      */
 
      public static function alert(string $type, string $content): void
      {
 
-         if(!preg_match('/danger|warning|success|info/', $type)) throw new \NeeZiaa\Utils\Exception("Incorrect type");
+         if(!preg_match('/danger|warning|success|info/', $type)) throw new \Exception("Incorrect type");
 
          $alert = array(
              'type' => $type,
@@ -26,9 +26,6 @@ class Alert {
 
     }
 
-    /**
-     * @throws \NeeZiaa\Utils\Exception
-     */
     public static function show(): string
     {
 

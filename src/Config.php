@@ -1,6 +1,6 @@
 <?php
 
-namespace NeeZiaa\Utils;
+namespace NeeZiaa;
 
 use Dotenv\Dotenv;
 
@@ -24,7 +24,7 @@ class Config {
 
     public function __construct()
     {
-        $settings = Dotenv::createImmutable(dirname(__DIR__, 2))->load();
+        $settings = Dotenv::createImmutable(dirname(__DIR__))->load();
         $this->settings = $settings;
     }
 
@@ -51,23 +51,21 @@ class Config {
     /**
      * @param mixed $settings
      * @return bool
+     * @throws \Exception
      */
 
     public function update(mixed $settings): bool
     {
-        $parent = dirname(__DIR__, 2) . '/';
+        $parent = dirname(__DIR__, 2) . 'Config.php/';
 
         try {
             $env = fopen($parent . '.env', 'w+');
             $backup = fopen($parent . '.env.backup', 'w+');
-            // Create backup
             file_put_contents($parent . '.env.backup', file_get_contents($parent . '.env'));
-            // Update settings
             file_put_contents($parent . '.env', $settings);
             return true;
-        } catch(Exception $e) {
-            // Some error
-            return false;
+        } catch(\Exception $e) {
+            throw new \Exception("Config update failed | " . $e);
         }
 
     }

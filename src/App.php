@@ -12,7 +12,6 @@ use NeeZiaa\Router\Router;
 use NeeZiaa\Router\RouterException;
 use NeeZiaa\Router\Routes;
 use NeeZiaa\Twig\Twig;
-use NeeZiaa\Utils\Config;
 use NeeZiaa\Utils\Ip;
 use ReflectionException;
 
@@ -43,7 +42,6 @@ class App {
     public function __construct(Config $config = null)
     {
         is_null($config) ? $this->settings = Config::getInstance() : $this->settings = $config;
-
     }
 
     /**
@@ -65,7 +63,7 @@ class App {
     public function getRouter(): Router
     {
         if(is_null($this->router)){
-            $this->router = Router::getInstance();
+            $this->router = new Router($_SERVER['REQUEST_URI']);
         }
         return $this->router;
     }
@@ -88,29 +86,6 @@ class App {
         }
         return $this->db;
 
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser(): User
-    {
-        if(is_null($this->user)){
-            $this->user = new User();
-        }
-        return $this->user;
-    }
-
-    /**
-     * @return Job
-     */
-
-    public function getJob(): Job
-    {
-        if(is_null($this->job)){
-            $this->job = new Job();
-        }
-        return $this->job;
     }
 
     /**
@@ -180,42 +155,34 @@ class App {
     }
 
     /**
-     * @return array
-     */
-    public function extractPost(): array
-    {
-        if($_SERVER['REQUEST_METHOD'] === "POST")
-        {
-            $raw = file_get_contents('php://input');
-            if($array = json_decode($raw, true)) {
-                return $_POST = $array;
-            }
-        }
-    }
-
-    /**
+     * @param string $controller
+     * @return $this
      * @throws ReflectionException
      */
-    public function registerController($controller)
+    public function registerController(string $controller): self
     {
-        $class = new \ReflectionClass($controller);
+        $class = new \ReflectionClass('App\Controller\\' . $controller . 'Controller');
         $routeAttributes = $class->getAttributes(Route::class);
-        $prefix = '';
-        if(!empty($routeAttributes)) {
-            $prefix = $routeAttributes[0]->newInstance()->getPath();
-        }
+
+        !empty($routeAttributes) ? $prefix = $routeAttributes[0]->newInstance()->getPath() : $prefix = '';
+
         foreach ($class->getMethods() as $method) {
             $routeAttributes = $method->getAttributes(Route::class);
             if(empty($routeAttributes)) {
                 continue;
             }
             foreach ($routeAttributes as $routeAttribute) {
+                /** @var Route $route */
                 $route = $routeAttribute->newInstance();
-                // $this->router->get($prefix . $route->getPath, []);
+                $this->getRouter()->register($route->getMethod(), $prefix . $route->getPath(), $controller . '@' . $method->getName(), $route->getName());
             }
         }
+        return $this;
     }
 
-
+    public function run()
+    {
+        $this->getRouter()->run();
+    }
 
 }

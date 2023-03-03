@@ -3,7 +3,6 @@
 namespace NeeZiaa\Twig\Extensions;
 
 use NeeZiaa\Utils\Alert;
-use NeeZiaa\Utils\Exception;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

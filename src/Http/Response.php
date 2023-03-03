@@ -65,7 +65,7 @@ class Response {
      */
     public function build(): self
     {
-        http_response_code($this->status);
+        http_response_code($this->httpStatus);
         header("HTTP/{$this->httpVersion} {$this->httpStatus} {$this->httpMessage}");
         foreach($this->headers as $k => $v) {
             header("{$k}: {$v}");

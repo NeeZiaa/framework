@@ -16,7 +16,8 @@
       "ext-pdo": "*",
       "ext-simplexml": "*",
         "ext-libxml": "*",
-      "ext-curl": "*"
+      "ext-curl": "*",
+      "ext-yaml": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.0"

@@ -8,18 +8,8 @@ use NeeZiaa\Router\RouterException;
 class Router
 {
     private string $url;
-    private array $routes = array();
-    private array $namedRoutes = array();
-    public static Router|null $_instance = null;
-
-    /**
-     * @return Router|null
-     */
-    public static function getInstance(): ?Router
-    {
-        if(isset(self::$_instance) == null) self::$_instance = new Router($_SERVER['REQUEST_URI']);
-        return self::$_instance;
-    }
+    private array $routes = [];
+    private array $namedRoutes = [];
 
     /**
      *  constructor
@@ -38,11 +28,12 @@ class Router
      * @param mixed $callable
      * @param string|null $name
      *
-     * @return Route
+     * @return self
      */
-    public function get(string $path, mixed $callable, ?string $name = null): Route
+    public function get(string $path, mixed $callable, ?string $name = null): self
     {
-        return $this->add($path, $callable, $name, 'GET');
+        $this->register($path, $callable, $name, 'GET');
+        return $this;
     }
 
     /**
@@ -51,11 +42,12 @@ class Router
      * @param string $path
      * @param mixed $callable
      * @param string|null $name
-     * @return Route
+     * @return self
      */
-    public function post(string $path, mixed $callable, ?string $name = null): Route
+    public function post(string $path, mixed $callable, ?string $name = null): self
     {
-        return $this->add($path, $callable, $name, 'POST');
+        $this->register($path, $callable, $name, 'POST');
+        return $this;
     }
 
     /**
@@ -67,7 +59,7 @@ class Router
      * @param string $method
      * @return Route
      */
-    private function add(string $path, mixed $callable, ?string $name, string $method): Route
+    public function register(string $method, string $path, mixed $callable, ?string $name): Route
     {
         $route = new Route($path, $callable);
         $this->routes[$method][] = $route;
@@ -88,7 +80,10 @@ class Router
         throw new RouterException('No matching routes');
     }
 
-    public function current(): string
+    /**
+     * @return string
+     */
+    public function currentUrl(): string
     {
         if(isset($_SERVER['HTTPS'])) $protocol = 'https'; else $protocol = 'http';
         return $protocol . '://' . $_SERVER['HTTP_HOST'] . $this->url;
@@ -98,18 +93,20 @@ class Router
      * Generate link
      * @throws \NeeZiaa\Router\RouterException
      */
-    public function url(string $name, array $params = [])
+    public function generateUrl(string $name, array $params = [])
     {
         if (!isset($this->namedRoutes[$name])) throw new RouterException('No route matches this name');
         return $this->namedRoutes[$name]->getUrl($params);
     }
 
-    /**
-     * Redirect to route
-     * @throws \NeeZiaa\Router\RouterException
-     */
-    public function redirect(string $route, array $params = []): void
+    public function getParams()
     {
-        header('Location: '. $this->url($route, $params));
+
     }
+
+    public function checkUrl()
+    {
+
+    }
+
 }

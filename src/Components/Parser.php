@@ -1,6 +1,6 @@
 <?php
 
-namespace NeeZiaa;
+namespace NeeZiaa\Components;
 use NeeZiaa\Stream\ParserException;
 use SimpleXMLElement;
 
@@ -29,7 +29,7 @@ class Parser {
      */
     private static function detect(string|array $input): string
     {
-        if(gettype($input) == "array") return $array;
+        if(gettype($input) == "array") echo "array";
 
         if(self::getArrayFromYaml($input) !== false) {
             return 'yaml';
