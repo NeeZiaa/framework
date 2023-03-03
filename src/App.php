@@ -13,107 +13,108 @@ use Psr\Log\NullLogger;
 
 class App {
 
+    // Singleton instance
     private static ?App $_instance = null;
 
+    // Application settings
     private ?Config $settings;
+
+    // Application routes
     private ?Routes $route = null;
+
+    // Twig template engine instance
     private ?Twig $twig = null;
 
+    // Database connection instance
     private mixed $db = null;
+
+    // Router instance
     private ?Router $router = null;
 
     /**
+     * Returns the singleton instance of App.
+     *
      * @return App
      */
     public static function getInstance(): App
     {
-        if(is_null(self::$_instance)) self::$_instance = new App(Config::getInstance());
+        if(is_null(self::$_instance)) {
+            // Creates a new instance of App
+            self::$_instance = new App(Config::getInstance());
+        }
+        // Returns the singleton instance of App
         return self::$_instance;
     }
 
+    /**
+     * Initializes the App with the given configuration.
+     *
+     * @param Config $config
+     */
     public function __construct(Config $config)
     {
+        // Sets the application settings
         $this->settings = Config::getInstance();
     }
 
     /**
+     * Returns the application routes.
+     *
      * @return Routes
      * @throws RouterException
      */
     public function setRoutes(): Routes
     {
         if(is_null($this->route)){
+            // Creates a new instance of Routes
             $this->route = new Routes();
+            // Registers the application routes
             $this->route->routes();
         }
+        // Returns the application routes
         return $this->route;
     }
 
+    /**
+     * Returns the router instance.
+     *
+     * @return Router|null
+     */
     public function getRouter(): ?Router
     {
         if(is_null($this->router)){
+            // Creates a new instance of Router
             $this->router = Router::getInstance();
         }
+        // Returns the router instance
         return $this->router;
     }
 
     /**
+     * Returns the database connection instance.
+     *
+     * @return mixed
      * @throws DatabaseException
      */
     public function getDb()
     {
         if(is_null($this->db)) {
+            // Gets the database settings
             $settings = $this->settings->get_all();
+            // Supported drivers
             $all_drivers = array('mysql');
+            // Gets the database driver
             $driver = $this->settings->get('DB_DRIVER');
+            // If the driver is supported
             if(in_array($driver, $all_drivers))
             {
+                // Gets the driver class name
                 $drivername = 'NeeZiaa\Database\\'.ucfirst($driver) . '\\' . ucfirst($driver).'Database';
+                // Creates a new instance of the driver class
                 return (new $drivername)->getDb($settings['DB_HOST'], $settings['DB_NAME'], $settings['DB_USER'], $settings['DB_PASSWORD']);
             }
+            // If the driver is not supported
             throw new DatabaseException('Undefined driver');
         }
-        return $this->db;
-
-    }
-
-    /**
-     * @return Config|null
-     */
-    public function getSettings(): ?Config
-    {
-        return $this->settings;
-    }
-
-    /**
-     * @return Twig|null
-     */
-
-    public function getTwig(): ?Twig
-    {
-        if(is_null($this->twig)){
-            $this->twig = new Twig($this->getExtensions('twig'));
-        }
-        return $this->twig;
-    }
-
-    /**
-     * @param string|NULL $type
-     * @return array
-     */
-
-    public function getExtensions(string $type = NULL): array
-    {
-        $extensions = file_get_contents(dirname(__DIR__) . '/extensions.xml');
-        $xml = simplexml_load_string($extensions, "SimpleXMLElement", LIBXML_NOCDATA);
-        $json = json_encode($xml);
-        if(!is_null($type)) return json_decode($json,TRUE)[$type];
-        return json_decode($json,TRUE);
-    }
-
-    public function getIp(): string
-    {
-        return Ip::getIp();
-    }
-
-}
+        // Returns the database connection instance
+        return $this
