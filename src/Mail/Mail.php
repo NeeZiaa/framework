@@ -6,7 +6,20 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Mail {
 
-    public static function send_mail(string $email, string $subject, string $body, string $altbody){
+    public static function send_mail(string $email, string $subject, string $body = '', string $altbody = ''){
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException('Invalid email address');
+        }
+        
+        if (empty($subject)) {
+            throw new InvalidArgumentException('Subject cannot be empty');
+        }
+        
+        // if body is empty, use default message
+        if (empty($body)) {
+            $body = 'This is the default message.';
+        }
+        
         $mail = new PHPMailer(true);
   
         try {
@@ -23,10 +36,6 @@ class Mail {
             $mail->setFrom('');
             $mail->addAddress($email);
         
-            //Attachments
-            //$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-            //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-        
             //Content
             $mail->isHTML(true);
             $mail->Subject = $subject;
@@ -34,13 +43,12 @@ class Mail {
             $mail->AltBody = $altbody;
         
             $mail->send();
-            $resultSend = 'Message has been sent';
+            $sendResult = 'Message has been sent';
         } catch (Exception $e) {
-            $resultSend = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            $sendResult = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
   
-        return $resultSend;
+        return $sendResult;
   
-      }
-
+    }
 }
