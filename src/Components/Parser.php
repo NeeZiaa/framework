@@ -74,24 +74,14 @@ class Parser {
      * @param string $key
      * @return $this
      */
-    public function add(string $value, string $key = ""): self
+    public function add(string|array $value, string $key = ""): self
     {
-        dd(array_keys($this->array));
         if(empty($key)) {
-            // $key = 
-        }        
-        // $array[$key]
-        // if(empty($key))
-        // foreach ($input as $k => $v) {
-        //     dd($k);
-        //     dd($v);
-        //     while($type = "array") {
-        //         if(gettype($i) == $array) {
-
-        //         }
-        //     }
-        //     $this->array[$i] = $value;
-        // }
+            $this->array[] = $value;
+        } else {
+            $this->array[$key] = $value;
+        }
+        
         return $this;
     }
 
