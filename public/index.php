@@ -1,6 +1,6 @@
 <?php
 
-require dirname(__DIR__).'/vendor/autoload.php';
+require dirname(__DIR__). DIRECTORY_SEPARATOR .'vendor'. DIRECTORY_SEPARATOR .'autoload.php';
 
 session_start();
 
@@ -14,11 +14,6 @@ if($app->getSettings()->get('DEBUG'))
     $whoops = new \Whoops\Run;
     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
     $whoops->register();
-}
-if(extension_loaded('yaml')) {
-    dd("Extension chargée");
-} else {
-    dd('Extension non chargée');
 }
 
 $app->registerController("Home");

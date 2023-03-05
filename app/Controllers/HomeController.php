@@ -21,13 +21,12 @@ class HomeController extends Controller
     public function index()
     {
         $input = array('hey', 'test', 'bye');
-        $parser = (new Parser($input, "array"))->add('test2')
+        $parser = (new Parser($input, "array"))->add('test2');
         (new Response())
             ->setBody("Hello")
             ->setStatus(201)
             ->build()
             ->send();
-        echo "Hey";
     }
 
     public function login()

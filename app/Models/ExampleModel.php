@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use NeeZiaa\Database\Mysql\QueryBuilder;
+use NeeZiaa\Database\QueryBuilder;
 
 class ExampleModel
 {
 
-    public function example(): array
+    public static function example(): array
     {
         return (new QueryBuilder())
             ->select()

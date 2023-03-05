@@ -19,7 +19,7 @@ class Parser {
     {
         $type = self::detect($input);
         $this->$type = $input;
-        $this->buildArray($input, $type);
+        $this->buildArray($type, $input);
     }
 
     /**
@@ -29,7 +29,7 @@ class Parser {
      */
     private static function detect(string|array $input): string
     {
-        if(gettype($input) == "array") echo "array";
+        if(gettype($input) == "array") return "array";
 
         if(self::getArrayFromYaml($input) !== false) {
             return 'yaml';
@@ -68,7 +68,7 @@ class Parser {
             json_encode(simplexml_load_string($input))
         );
     }
-
+ 
     /**
      * @param string $value
      * @param string $key
@@ -76,20 +76,22 @@ class Parser {
      */
     public function add(string $value, string $key = ""): self
     {
-        $input =
-        [
-            [
-                'key'=>'aa',
-                'value'=>'bb',
-            ],
-            [
-                ''
-            ]
-        ];
-        if(empty($key))
-        foreach ($input as $i) {
-            $this->array[$i] = $value;
-        }
+        dd(array_keys($this->array));
+        if(empty($key)) {
+            // $key = 
+        }        
+        // $array[$key]
+        // if(empty($key))
+        // foreach ($input as $k => $v) {
+        //     dd($k);
+        //     dd($v);
+        //     while($type = "array") {
+        //         if(gettype($i) == $array) {
+
+        //         }
+        //     }
+        //     $this->array[$i] = $value;
+        // }
         return $this;
     }
 
