@@ -20,22 +20,24 @@ class HomeController extends Controller
     #[Route(method: "GET", path: "/", name: "home")]
     public function index()
     {
-        $input = [
-            'utilisateur1' => [
-                'id' => 1,
-                "email" => "email@aaa.fr",
-                "mdp" => "aaa"
-            ]
-        ];
-        // $input = '{"0":"hey","1":"test","2":"bye","test":"test2"}';
-        $parser = new Parser($input);
-        $parser->add(['utilisateur2' => [
-            'id' => 1,
-            "email" => "email@aaa.fr",
-            "mdp" => "aaa"
-        ]]);
-        $array = $parser->getJson();
-        dd($array);
+        // $input = [
+        //     'utilisateur1' => [
+        //         'id' => 1,
+        //         "email" => "email@aaa.fr",
+        //         "mdp" => "aaa"
+        //     ]
+        // ];
+        // // $input = '{"0":"hey","1":"test","2":"bye","test":"test2"}';
+        // $parser = new Parser($input);
+        // $parser->add(['utilisateur2' => [
+        //     'id' => 1,
+        //     "email" => "email@aaa.fr",
+        //     "mdp" => "aaa"
+        // ]]);
+        // $array = $parser->getJson();
+        // dd($array);
+        $string = "///lang\\";
+        dd(trim($string, "/\\"));
         
         (new Response())
             ->setBody("Hello")
