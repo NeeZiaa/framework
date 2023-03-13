@@ -36,8 +36,6 @@ class HomeController extends Controller
         // ]]);
         // $array = $parser->getJson();
         // dd($array);
-        $string = "///lang\\";
-        dd(trim($string, "/\\"));
         
         (new Response())
             ->setBody("Hello")
