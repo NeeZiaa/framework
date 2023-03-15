@@ -7,6 +7,7 @@ use NeeZiaa\Attributes\Route;
 use NeeZiaa\Components\Parser;
 use NeeZiaa\Controller;
 use NeeZiaa\Http\Response;
+use NeeZiaa\Lang\Lang;
 
 class HomeController extends Controller
 {
@@ -37,11 +38,12 @@ class HomeController extends Controller
         // $array = $parser->getJson();
         // dd($array);
         
-        (new Response())
-            ->setBody("Hello")
-            ->setStatus(201)
-            ->build()
-            ->send();
+        dd(Lang::translate("a", "fr"));
+        // (new Response())
+        //     ->setBody(Lang::translate("a", "fr"))
+        //     ->setStatus(201)
+        //     ->build()
+        //     ->send();
     }
 
     public function login()

@@ -54,4 +54,17 @@ abstract class AbstractController {
         );
     }
 
+    public function render(string $filename, ?array $arrayLoader = NULL, ?array $twig = null)
+    {   
+        $twig = $this->app->getTwig();
+        $twigArray = [];
+
+        if (!is_null($arrayLoader)) {
+            $twigArray = array_merge($twigArray, $arrayLoader);
+        }
+        // TODO send HTTP response
+        $twig->render($filename . '.html.twig', $twigArray);
+
+        return $twig;
+    }
 }

@@ -3,6 +3,7 @@
 namespace NeeZiaa;
 
 use NeeZiaa\Attributes\Route;
+use NeeZiaa\Components\ConfigLoader;
 use NeeZiaa\Database\DatabaseException;
 use NeeZiaa\Http\ServerRequest;
 use NeeZiaa\Permissions\Job;
@@ -14,6 +15,8 @@ use NeeZiaa\Router\Routes;
 use NeeZiaa\Twig\Twig;
 use NeeZiaa\Utils\Ip;
 use ReflectionException;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class App {
 
@@ -113,9 +116,35 @@ class App {
 
     public function getTwig(): Twig
     {
-        if(is_null($this->twig)){
-            $this->twig = new Twig($this->getExtensions('twig'));
+        $twigConfig = (new ConfigLoader("config" . DIRECTORY_SEPARATOR . "twig", "config" . ".yaml"))->get();
+        $loader = new FilesystemLoader(dirname(__DIR__) . $twigConfig['views_path']);
+
+        if($twigConfig['cache_path']) $options = ['cache' => $twigConfig['cache_path']]; else $options = [];
+
+        $twig = new Environment($loader, $options);
+        $extensions = $twigConfig['extensions'];
+
+        if(!is_null($extensions)) {
+            foreach ($extensions['functions'] as $fu){
+                $name = '\NeeZiaa\Twig\Extensions\\'. ucfirst($fu) . 'Extension';
+                foreach ((new $name())->getFunctions() as $v) {
+                    $twig->addFunction($v);
+                }
+                $twig->addExtension(new $name());
+            }
+            foreach ($extensions['filters'] as $fi){
+                $name = '\NeeZiaa\Twig\\'. ucfirst($fi) . 'Extension';
+                $twig->addFunction(
+                    (new $name())
+                        ->getFilters()
+                );
+                $twig->addExtension(new $name());
+            }
         }
+
+        // if(is_null($this->twig)){
+        //     $this->twig = new Twig($this->getExtensions('twig'));
+        // }
         return $this->twig;
     }
 

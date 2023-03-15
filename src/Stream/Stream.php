@@ -15,8 +15,9 @@ class Stream {
         $this->file = trim($file, '\/');
     }
 
-    public function getContents()
+    public function getData()
     {
+        // dd($this->directory . DIRECTORY_SEPARATOR . $this->file);
         if(file_exists($this->directory . DIRECTORY_SEPARATOR . $this->file))
         {
             return file_get_contents($this->directory . DIRECTORY_SEPARATOR . $this->file);
@@ -25,29 +26,24 @@ class Stream {
         }
     }
 
-    public function putContents(string $content, bool $overwritte = false, bool $createIfNotExist = false) 
+    public function putData(string $data, bool $overwritte = false, bool $createIfNotExist = false) 
     {            
         if(is_dir($this->directory)) {
-
+            if(!file_exists($this->directory . DIRECTORY_SEPARATOR . $this->file)){
+                if(!$createIfNotExist) {
+                    throw new StreamException("File not found");
+                }
+            }
+            $stream = fopen($this->directory . DIRECTORY_SEPARATOR . $this->file, "a+");
+            if($overwritte) {
+                file_put_contents($this->directory . DIRECTORY_SEPARATOR . $this->file, $data);
+            } else {
+                fwrite($stream, $data);
+            }
         } else {
             throw new StreamException("Directory not found");
         }
-        if($createIfNotExist) {
-            
-        }
-        if(file_exists($this->directory . DIRECTORY_SEPARATOR . $this->file)){
-
-
-        } else {
-            throw new Exception("File not found");
-        }            
-        if($overwritte) {
-            return file_put_contents($this->directory . DIRECTORY_SEPARATOR . $this->file, $content)
-        } else {
-            $stream = fopen($this->directory . DIRECTORY_SEPARATOR . $this->file, "a+")
-        }
     }
-
 
     public function upload(mixed $file): bool|string
     {

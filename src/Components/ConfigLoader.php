@@ -1,33 +1,30 @@
 <?php
 
 namespace NeeZiaa\Components;
+use NeeZiaa\Stream\Stream;
 
 class ConfigLoader {
 
-    private string $configDirectory = "config" . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR;
+    private string $configDirectory = "config";
     private string $configFile;
+    private Stream $stream;
 
-    public function __construct($configName) 
+    public function __construct(string $configDirectory, string $configName) 
     {
+        $this->configDirectory = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . trim($this->configDirectory, "\/") . DIRECTORY_SEPARATOR . trim($configDirectory, "\/");
         $this->configFile = trim($configName, '\/');
-        $stream = new Stream($this->configDirectory . $this->configFile);
-        $stream = new Stream($this->configDirectory)
-        $stream->upload($file)
+        $this->stream = new Stream($this->configDirectory, $this->configFile);
     }
 
     public function get() 
     {
-        
+        return (new Parser($this->stream->getData()))->getArray();
     }
 
-    public function write(string $content) 
+    public function write(string|array $data) 
     {
-        
-    }
-
-    public function openFile(string $file) 
-    {
-        return fopen($this->configDirectory . $file);
+        if(is_array($data)) $data = (new Parser($data))->getYaml();
+        $this->stream->putData($data, true);
     }
 
 }
