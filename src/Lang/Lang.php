@@ -6,13 +6,12 @@ class Lang {
     private static string $currentLang;
 
     public static function translate(string $translate, string $lang = "english", string $domain = "") {
-        $lang = new Parser(new ConfigLoader("admin/"))
-        
+        $lang = new Parser(new ConfigLoader("admin/"));
     }
 
-    public function register(array $translate)
+    public static function register(array $translate)
     {
-
+        
     }
 
     public function auto() {
