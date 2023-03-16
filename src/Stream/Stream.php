@@ -6,26 +6,39 @@ use NeeZiaa\Stream\Exceptions\StreamException;
 class Stream {
 
     private string $directory;
-
     private string $file;
 
+    /**
+     * @param string $directory
+     * @param string $file
+     */
     public function __construct(string $directory, string $file)
     {
         $this->directory = trim($directory, '\/');
         $this->file = trim($file, '\/');
     }
 
+    /**
+     * @return false|string
+     * @throws StreamException
+     */
     public function getData()
     {
-        // dd($this->directory . DIRECTORY_SEPARATOR . $this->file);
         if(file_exists($this->directory . DIRECTORY_SEPARATOR . $this->file))
         {
             return file_get_contents($this->directory . DIRECTORY_SEPARATOR . $this->file);
         } else {
-            throw new StreamException("File not found");
+            throw new StreamException("File not found in " . $this->directory . DIRECTORY_SEPARATOR . $this->file);
         }
     }
 
+    /**
+     * @param string $data
+     * @param bool $overwritte
+     * @param bool $createIfNotExist
+     * @return void
+     * @throws StreamException
+     */
     public function putData(string $data, bool $overwritte = false, bool $createIfNotExist = false) 
     {            
         if(is_dir($this->directory)) {
@@ -45,6 +58,11 @@ class Stream {
         }
     }
 
+    /**
+     * @param mixed $file
+     * @return bool|string
+     * @throws StreamException
+     */
     public function upload(mixed $file): bool|string
     {
         $file = $file->file;

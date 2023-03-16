@@ -3,47 +3,19 @@
 namespace App\Controller;
 
 use App\Models\ExampleModel;
+use NeeZiaa\AbstractController;
 use NeeZiaa\Attributes\Route;
-use NeeZiaa\Components\Parser;
-use NeeZiaa\Controller;
-use NeeZiaa\Http\Response;
-use NeeZiaa\Lang\Lang;
 
-class HomeController extends Controller
+class HomeController extends AbstractController
 {
 
     private ExampleModel $model;
 
-    /**
-     * @return void
-     * @throws \NeeZiaa\Stream\ParserException
-     */
     #[Route(method: "GET", path: "/", name: "home")]
     public function index()
     {
-        // $input = [
-        //     'utilisateur1' => [
-        //         'id' => 1,
-        //         "email" => "email@aaa.fr",
-        //         "mdp" => "aaa"
-        //     ]
-        // ];
-        // // $input = '{"0":"hey","1":"test","2":"bye","test":"test2"}';
-        // $parser = new Parser($input);
-        // $parser->add(['utilisateur2' => [
-        //     'id' => 1,
-        //     "email" => "email@aaa.fr",
-        //     "mdp" => "aaa"
-        // ]]);
-        // $array = $parser->getJson();
-        // dd($array);
-        
-        dd(Lang::translate("a", "fr"));
-        // (new Response())
-        //     ->setBody(Lang::translate("a", "fr"))
-        //     ->setStatus(201)
-        //     ->build()
-        //     ->send();
+        $this->render('test');
+//        echo $twig->render('test.html.twig', []);
     }
 
     public function login()

@@ -1,9 +1,9 @@
-extentions:
+extensions:
   functions:
     - Form
     - Url
     - Permission
     - Others
-  filters:
-views_path: app/views
+  filters: []
+views_path: app/Views
 cache_path: cache

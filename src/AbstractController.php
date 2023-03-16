@@ -1,6 +1,7 @@
 <?php
 namespace NeeZiaa;
 
+use NeeZiaa\Http\Response;
 use NeeZiaa\Router\Router;
 use NeeZiaa\Router\RouterException;
 
@@ -9,7 +10,7 @@ abstract class AbstractController {
     protected App $app;
     protected Router $router;
 
-    protected function __construct()
+    public function __construct()
     {
         $this->app = App::getInstance();
         $this->router = $this->app->getRouter();
@@ -54,17 +55,24 @@ abstract class AbstractController {
         );
     }
 
-    public function render(string $filename, ?array $arrayLoader = NULL, ?array $twig = null)
-    {   
+    /**
+     * @param string $filename
+     * @param array $arrayLoader
+     * @param array|null $twig
+     * @return void
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    protected function render(string $filename, array $arrayLoader = [], ?array $twig = null)
+    {
+        $filename = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $filename);
         $twig = $this->app->getTwig();
         $twigArray = [];
-
-        if (!is_null($arrayLoader)) {
-            $twigArray = array_merge($twigArray, $arrayLoader);
-        }
-        // TODO send HTTP response
-        $twig->render($filename . '.html.twig', $twigArray);
-
-        return $twig;
+        $twigArray = array_merge($twigArray, $arrayLoader);
+        (new Response())
+            ->setBody($twig->render($filename . '.html.twig', $twigArray))
+            ->setStatus(201)
+            ->send();
     }
 }

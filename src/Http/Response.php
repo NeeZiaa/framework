@@ -63,7 +63,7 @@ class Response {
     /**
      * @return Response
      */
-    public function build(): self
+    private function build(): self
     {
         http_response_code($this->httpStatus);
         header("HTTP/{$this->httpVersion} {$this->httpStatus} {$this->httpMessage}");
@@ -75,6 +75,7 @@ class Response {
 
     public function send()
     {
+        $this->build();
         echo $this->body;
     }
 

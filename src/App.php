@@ -3,7 +3,7 @@
 namespace NeeZiaa;
 
 use NeeZiaa\Attributes\Route;
-use NeeZiaa\Components\ConfigLoader;
+use NeeZiaa\Components\Twig;
 use NeeZiaa\Database\DatabaseException;
 use NeeZiaa\Http\ServerRequest;
 use NeeZiaa\Permissions\Job;
@@ -12,11 +12,9 @@ use NeeZiaa\Permissions\User;
 use NeeZiaa\Router\Router;
 use NeeZiaa\Router\RouterException;
 use NeeZiaa\Router\Routes;
-use NeeZiaa\Twig\Twig;
 use NeeZiaa\Utils\Ip;
 use ReflectionException;
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 class App {
 
@@ -24,7 +22,7 @@ class App {
 
     private ?Config $settings;
     private ?Routes $route = null;
-    private ?Twig $twig = null;
+    private ?Environment $twig = null;
     private ?User $user = null;
     private ?Job $job = null;
     private ?Permission $permission = null;
@@ -65,9 +63,7 @@ class App {
      */
     public function getRouter(): Router
     {
-        if(is_null($this->router)){
-            $this->router = new Router($_SERVER['REQUEST_URI']);
-        }
+        if(is_null($this->router)) $this->router = new Router($_SERVER['REQUEST_URI']);
         return $this->router;
     }
 
@@ -96,9 +92,7 @@ class App {
      */
     public function getPermissions(): Permission
     {
-        if(is_null($this->permission)){
-            $this->permission = new Permission($this->getUser());
-        }
+        if(is_null($this->permission)) $this->permission = new Permission($this->getUser());
         return $this->permission;
     }
 
@@ -114,37 +108,11 @@ class App {
      * @return Twig
      */
 
-    public function getTwig(): Twig
+    public function getTwig(): Environment
     {
-        $twigConfig = (new ConfigLoader("config" . DIRECTORY_SEPARATOR . "twig", "config" . ".yaml"))->get();
-        $loader = new FilesystemLoader(dirname(__DIR__) . $twigConfig['views_path']);
-
-        if($twigConfig['cache_path']) $options = ['cache' => $twigConfig['cache_path']]; else $options = [];
-
-        $twig = new Environment($loader, $options);
-        $extensions = $twigConfig['extensions'];
-
-        if(!is_null($extensions)) {
-            foreach ($extensions['functions'] as $fu){
-                $name = '\NeeZiaa\Twig\Extensions\\'. ucfirst($fu) . 'Extension';
-                foreach ((new $name())->getFunctions() as $v) {
-                    $twig->addFunction($v);
-                }
-                $twig->addExtension(new $name());
-            }
-            foreach ($extensions['filters'] as $fi){
-                $name = '\NeeZiaa\Twig\\'. ucfirst($fi) . 'Extension';
-                $twig->addFunction(
-                    (new $name())
-                        ->getFilters()
-                );
-                $twig->addExtension(new $name());
-            }
+        if(is_null($this->twig)) {
+            $this->twig = Twig::getTwig();
         }
-
-        // if(is_null($this->twig)){
-        //     $this->twig = new Twig($this->getExtensions('twig'));
-        // }
         return $this->twig;
     }
 
@@ -154,9 +122,7 @@ class App {
      */
     public function getRequest(): ServerRequest
     {
-        if(is_null($this->request)) {
-            $this->request = ServerRequest::fromGlobals();
-        }
+        if(is_null($this->request)) $this->request = ServerRequest::fromGlobals();
         return $this->request;
     }
 
