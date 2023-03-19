@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Models\ExampleModel;
 use NeeZiaa\AbstractController;
 use NeeZiaa\Attributes\Route;
+use NeeZiaa\User;
 
 class HomeController extends AbstractController
 {
@@ -14,6 +15,15 @@ class HomeController extends AbstractController
     #[Route(method: "GET", path: "/", name: "home")]
     public function index()
     {
+//        $user = (new User())->getByID(1)->getProps();
+//        $user2 = (new User())->getProps();
+//        $a = (object)['email'=>'hello'];
+//        $user = new User();
+//        dd($user->getUser());
+//        $user->setUser();
+//        if($_SERVER['REQUEST_METHOD'] == "POST") {
+//            new FieldsChecker();
+//        }
         $this->render('test');
 //        echo $twig->render('test.html.twig', []);
     }

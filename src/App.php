@@ -3,8 +3,10 @@
 namespace NeeZiaa;
 
 use NeeZiaa\Attributes\Route;
+use NeeZiaa\Components\ConfigLoader;
 use NeeZiaa\Components\Twig;
 use NeeZiaa\Database\DatabaseException;
+use NeeZiaa\Database\MysqlDatabase;
 use NeeZiaa\Http\ServerRequest;
 use NeeZiaa\Permissions\Job;
 use NeeZiaa\Permissions\Permission;
@@ -58,6 +60,14 @@ class App {
         return $this->route;
     }
 
+    public function getClassInstance(string $class)
+    {
+        if(is_null($this->$class)) {
+            $this->$class = new $class();
+        }
+        return $this->$class;
+    }
+
     /**
      * @return Router
      */
@@ -72,16 +82,17 @@ class App {
      */
     public function getDb()
     {
+        $config = (new ConfigLoader('database/config'))->get();
         if(is_null($this->db)) {
-            $settings = $this->settings->get_all();
-            $allDrivers = array('mysql');
-            $driver = $this->settings->get('DB_DRIVER');
-            if(in_array($driver, $allDrivers))
-            {
-                $driverName = 'NeeZiaa\Database\\'.ucfirst($driver) . '\\' . ucfirst($driver).'Database';
-                return (new $drivername)->getDb($settings['DB_HOST'], $settings['DB_NAME'], $settings['DB_USER'], $settings['DB_PASSWORD']);
-            }
-            throw new DatabaseException('Undefined driver');
+//            $allDrivers = array('mysql');
+            $driver = $config['driver'];
+//            if(in_array($driver, $allDrivers))
+//            {
+//                $driverName = 'NeeZiaa\Database\\'.ucfirst($driver) . '\\' . ucfirst($driver).'Database';
+//                return (new $driverName)->getDb($settings['DB_HOST'], $settings['DB_NAME'], $settings['DB_USER'], $settings['DB_PASSWORD']);
+//            }
+//            throw new DatabaseException('Undefined driver');
+            return MysqlDatabase::getPDO($config['host'], $config['database'], $config['user'], $config['password']);
         }
         return $this->db;
 
@@ -147,6 +158,19 @@ class App {
     public function getIp(): string
     {
         return Ip::getIp();
+    }
+
+    /**
+     * @return void
+     * @throws Stream\Exceptions\StreamException
+     * @throws Stream\ParserException|ReflectionException
+     */
+    public function loadControllers()
+    {
+        $controllers = (new ConfigLoader('services'))->get()['controllers'];
+        foreach($controllers as $k => $v) {
+            $this->registerController($v);
+        }
     }
 
     /**

@@ -2,15 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
     {% block javascript %}{% endblock %}
 </head>
 {% block header %}
-
+    <header>
+        <div class="scroll-text">
+            <p>Livraison 24 heures !</p>
+            <p>Le MOINS chère du marché</p>
+            <p>100% authentique !</p>
+            <p>Editions limitées</p>
+            <p>Livraison 48 heures !</p>
+        </div>
+    </header>
 {% endblock %}
 
 {% block body %}

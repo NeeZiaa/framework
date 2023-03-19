@@ -1,0 +1,6 @@
+host: localhost
+database: bothlow_mvp
+user: root
+password: ""
+port: 3306
+driver: pdo_mysql

@@ -15,11 +15,16 @@ class ConfigLoader {
      * @param string $configDirectory
      * @param string $configName
      */
-    public function __construct(string $configDirectory, string $configName) 
+    public function __construct(string $configName, string $configDirectory = "")
     {
-        $this->configDirectory = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . trim($this->configDirectory, "\/") . DIRECTORY_SEPARATOR . trim($configDirectory, "\/");
         $this->configFile = trim($configName, '\/');
-        $this->stream = new Stream($this->configDirectory, $this->configFile);
+        if(empty($configDirectory))
+        {
+            $this->configDirectory = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . trim($this->configDirectory, "\/");
+        } else {
+            $this->configDirectory = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . trim($this->configDirectory, "\/") . DIRECTORY_SEPARATOR . trim($configDirectory, "\/");
+        }
+        $this->stream = new Stream($this->configDirectory, $this->configFile . '.yaml');
     }
 
     /**

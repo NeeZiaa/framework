@@ -16,7 +16,7 @@ if($app->getSettings()->get('DEBUG'))
     $whoops->register();
 }
 
-$app->registerController("Home");
+$app->loadControllers();
 $app->run();
 
 //! Code non exécuté | Unreachable code !

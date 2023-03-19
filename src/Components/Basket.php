@@ -10,6 +10,12 @@ class Basket {
 
     }
 
-    public function
+    public function add() {
+
+    }
+
+    public function delete() {
+
+    }
 
 }

@@ -1,0 +1,3 @@
+user:
+  tokenLength: 30
+  passwordHash: PASSWORD_ARGON2ID
